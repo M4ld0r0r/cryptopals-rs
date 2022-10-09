@@ -1,19 +1,11 @@
-// mod.rs ????
-
-// different modules ?? (mod.rs) (errors, etc)
-
-// DOCUMENTATION COMMENTS!!!
-
 use std::fmt;
 
-type Bytes = Vec<u8>;
-
-pub trait FromHex {
-    fn from_hex(s: &str) -> Result<Bytes, DecodeHexError>;
+pub trait FromHex: Sized {
+    fn from_hex(s: &str) -> Result<Self, DecodeHexError>;
 }
 
-impl FromHex for Bytes {
-    fn from_hex(s: &str) -> Result<Bytes, DecodeHexError> {
+impl FromHex for Vec<u8> {
+    fn from_hex(s: &str) -> Result<Self, DecodeHexError> {
         if s.len() % 2 != 0 {
             return Err(DecodeHexError::OddLength);
         }
@@ -39,6 +31,8 @@ pub enum DecodeHexError {
     InvalidByte,
 }
 
+impl std::error::Error for DecodeHexError {}
+
 impl fmt::Display for DecodeHexError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -48,7 +42,6 @@ impl fmt::Display for DecodeHexError {
     }
 }
 
-impl std::error::Error for DecodeHexError {}
 
 #[cfg(test)]
 mod tests {
@@ -56,22 +49,28 @@ mod tests {
 
     #[test]
     fn bytes_from_hex_correct_input() {
-        let result = Bytes::from_hex("1a3d44").unwrap();
+        let result = Vec::from_hex("1a3d44").unwrap();
         let expected = vec![26, 61, 68];
         assert_eq!(result, expected);
     }
 
     #[test]
     fn bytes_from_hex_odd_length() {
-        let result = Bytes::from_hex("a4b5h");
+        let result = Vec::from_hex("a4b5h");
         let expected = Err(DecodeHexError::OddLength);
         assert_eq!(result, expected);
     }
 
     #[test]
     fn bytes_from_hex_invalid_byte() {
-        let result = Bytes::from_hex("bb7do7");
+        let result = Vec::from_hex("bb7do7");
         let expected = Err(DecodeHexError::InvalidByte);
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_hex_empty() {
+        let result = Vec::from_hex("").unwrap();
+        assert_eq!(result, vec![])
     }
 }

@@ -1,6 +1,33 @@
 use std::fmt;
 
+mod error;
+pub use crate::error::*;
+
+/// Types that can be decoded from a hexadecimal string
 pub trait FromHex: Sized {
+    /// Converts the given hexadecimal string to an instance of type `Self`.
+    ///
+    /// Both lower-case an upper-case letters are supported.
+    ///
+    /// # Parameters
+    ///
+    /// `s`: An hexadecimal string
+    ///
+    /// # Returns
+    ///
+    /// A `Result` which is:
+    ///
+    /// - `Ok`: A `Self` value representing the result of the decoding
+    /// - `Err`: A `DecodeHexError`. Only happens if the input data is invalid.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use encoding::FromHex;
+    ///
+    /// let result = Vec::from_hex("1a3d44").unwrap();
+    /// assert_eq!(result, vec![26, 61, 68]);
+    /// ```
     fn from_hex(s: &str) -> Result<Self, DecodeHexError>;
 }
 
@@ -16,7 +43,7 @@ impl FromHex for Vec<u8> {
             match u8::from_str_radix(&s[i..i + 2], 16) {
                 Ok(b) => bytes.push(b),
                 _ => {
-                    return Err(DecodeHexError::InvalidByte);
+                    return Err(DecodeHexError::InvalidHexChar);
                 }
             }
         }
@@ -24,24 +51,6 @@ impl FromHex for Vec<u8> {
         Ok(bytes)
     }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum DecodeHexError {
-    OddLength,
-    InvalidByte,
-}
-
-impl std::error::Error for DecodeHexError {}
-
-impl fmt::Display for DecodeHexError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            DecodeHexError::OddLength => "input string has an odd number of bytes".fmt(f),
-            DecodeHexError::InvalidByte => "input string contains one or more invalid bytes".fmt(f),
-        }
-    }
-}
-
 
 #[cfg(test)]
 mod tests {
@@ -64,7 +73,7 @@ mod tests {
     #[test]
     fn bytes_from_hex_invalid_byte() {
         let result = Vec::from_hex("bb7do7");
-        let expected = Err(DecodeHexError::InvalidByte);
+        let expected = Err(DecodeHexError::InvalidHexChar);
         assert_eq!(result, expected);
     }
 

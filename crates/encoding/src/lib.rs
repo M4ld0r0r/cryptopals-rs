@@ -1,5 +1,3 @@
-use std::fmt;
-
 mod error;
 pub use crate::error::*;
 

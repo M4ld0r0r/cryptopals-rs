@@ -1,5 +1,5 @@
 mod error;
-pub use crate::error::*;
+pub use error::*;
 
 /// Types that can hold the result of hexadecimal and base64 decoding
 pub trait Decode: Sized {

@@ -1,7 +1,6 @@
 use std::fmt;
 
-/// Error type that can be returned in case there's an 
-/// attempt to decode invalid hexadecimal data
+/// Errors that can occur while decoding hexadecimal strings
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DecodeHexError {
     /// An hexadecimal string must have an even length

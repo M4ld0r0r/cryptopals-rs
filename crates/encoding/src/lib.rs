@@ -1,5 +1,5 @@
 mod error;
-pub use crate::error::*;
+pub use error::*;
 
 /// Types that can hold the result of hexadecimal and base64 decoding
 pub trait Decode: Sized {
@@ -13,7 +13,7 @@ pub trait Decode: Sized {
     /// use encoding::Decode;
     ///
     /// let result = Vec::from_hex("1a3d44").unwrap();
-    /// assert_eq!(result, vec![26, 61, 68]);
+    /// assert_eq!(result, vec![0x1a, 0x3d, 0x44]);
     /// ```
     fn from_hex(s: &str) -> Result<Self, DecodeHexError>;
 }
@@ -41,6 +41,19 @@ impl Decode for Vec<u8> {
 
 /// Types that can be encoded to hexadecimal and base64
 pub trait Encode {
+    /// Encodes the given type into a hex string
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use crate::encoding::Encode;
+    ///
+    /// let input = vec![0x32, 0x11, 0x3E, 0xFF, 0x5A];
+    /// let result = input.to_hex();
+    /// assert_eq!(result, String::from("32113eff5a"));
+    /// ```
+    fn to_hex(&self) -> String;
+
     /// Encodes the given type into a base64 string
     ///
     /// # Examples
@@ -48,7 +61,7 @@ pub trait Encode {
     /// ```
     /// use crate::encoding::Encode;
     ///
-    /// let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107];
+    /// let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B];
     /// let result = input.to_base64();
     /// assert_eq!(result, String::from("bGlnaHQgd29yaw=="));
     /// ```
@@ -56,6 +69,17 @@ pub trait Encode {
 }
 
 impl Encode for Vec<u8> {
+    fn to_hex(&self) -> String {
+        let mut hex = String::with_capacity(2 * self.len());
+
+        for byte in self {
+            let (nibble_1, nibble_2) = byte_to_nibbles(byte);
+            hex.push(nibble_1);
+            hex.push(nibble_2);
+        }
+        hex
+    }
+
     fn to_base64(&self) -> String {
         let mut base64 = String::with_capacity(4 * self.len() / 3);
 
@@ -77,6 +101,14 @@ impl Encode for Vec<u8> {
 
         base64
     }
+}
+
+/// Conversts a byte to a tuple of hex nibbles
+fn byte_to_nibbles(byte: &u8) -> (char, char) {
+    (
+        char::from_digit(u32::from(byte >> 4), 16).unwrap(),
+        char::from_digit(u32::from(byte & 0x0F), 16).unwrap(),
+    )
 }
 
 /// Converts a block of 3 bytes to an iterator with 4 base64 encoded characters
@@ -124,7 +156,7 @@ mod tests {
     #[test]
     fn bytes_from_hex_correct_input() {
         let result = Vec::from_hex("1a3d44").unwrap();
-        let expected = vec![26, 61, 68];
+        let expected = vec![0x1a, 0x3d, 0x44];
         assert_eq!(result, expected);
     }
 
@@ -149,8 +181,24 @@ mod tests {
     }
 
     #[test]
+    fn bytes_to_hex() {
+        let input = vec![0x32, 0x11, 0x3E, 0xFF, 0x5A];
+        let result = input.to_hex();
+        let expected = String::from("32113eff5a");
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_to_hex_empty() {
+        let input = vec![];
+        let result = input.to_hex();
+        let expected = String::from("");
+        assert_eq!(result, expected);
+    }
+
+    #[test]
     fn bytes_to_base64_padding_0() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114];
+        let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29y");
         assert_eq!(result, expected);
@@ -158,7 +206,9 @@ mod tests {
 
     #[test]
     fn bytes_to_base64_padding_1() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107, 46];
+        let input = vec![
+            0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B, 0x2E,
+        ];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29yay4=");
         assert_eq!(result, expected);
@@ -166,7 +216,7 @@ mod tests {
 
     #[test]
     fn bytes_to_base64_padding_2() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107];
+        let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29yaw==");
         assert_eq!(result, expected);

@@ -13,7 +13,7 @@ pub trait Decode: Sized {
     /// use encoding::Decode;
     ///
     /// let result = Vec::from_hex("1a3d44").unwrap();
-    /// assert_eq!(result, vec![26, 61, 68]);
+    /// assert_eq!(result, vec![0x1a, 0x3d, 0x44]);
     /// ```
     fn from_hex(s: &str) -> Result<Self, DecodeHexError>;
 }
@@ -48,7 +48,7 @@ pub trait Encode {
     /// ```
     /// use crate::encoding::Encode;
     ///
-    /// let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107];
+    /// let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B];
     /// let result = input.to_base64();
     /// assert_eq!(result, String::from("bGlnaHQgd29yaw=="));
     /// ```
@@ -124,7 +124,7 @@ mod tests {
     #[test]
     fn bytes_from_hex_correct_input() {
         let result = Vec::from_hex("1a3d44").unwrap();
-        let expected = vec![26, 61, 68];
+        let expected = vec![0x1a, 0x3d, 0x44];
         assert_eq!(result, expected);
     }
 
@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn bytes_to_base64_padding_0() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114];
+        let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29y");
         assert_eq!(result, expected);
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn bytes_to_base64_padding_1() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107, 46];
+        let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B, 0x2E];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29yay4=");
         assert_eq!(result, expected);
@@ -166,7 +166,7 @@ mod tests {
 
     #[test]
     fn bytes_to_base64_padding_2() {
-        let input = vec![108, 105, 103, 104, 116, 32, 119, 111, 114, 107];
+        let input = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B];
         let result = input.to_base64();
         let expected = String::from("bGlnaHQgd29yaw==");
         assert_eq!(result, expected);

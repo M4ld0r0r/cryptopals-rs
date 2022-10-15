@@ -12,9 +12,9 @@ fn main() {
     let result = xor(&input_1, &input_2);
     let hex_result = result.to_hex();
 
-    println!("INPUT_1: {}", INPUT_1);
-    println!("INPUT_2: {}", INPUT_2);
-    println!("XOR OUTPUT: {}", hex_result);
+    println!("Input string 1: {}", INPUT_1);
+    println!("Input string 2: {}", INPUT_2);
+    println!("XOR output: {}", hex_result);
 
     assert_eq!(hex_result, EXPECTED_RESULT);
 }

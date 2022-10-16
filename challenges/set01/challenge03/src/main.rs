@@ -1,5 +1,6 @@
 // Single-byte XOR cipher
 //
+//
 // The hex encoded string:
 //
 // 1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736
@@ -39,7 +40,7 @@ fn main() {
     let plaintext_bytes = xor(&ciphertext_bytes, &[best_key]);
     let plaintext = str::from_utf8(&plaintext_bytes).unwrap();
 
-    println!("Key: {}", best_key);
+    println!("Key: 0x{:x}", best_key);
     println!("Plaintext: {}", plaintext);
     println!("Score: {}/12", best_key_score);
 }

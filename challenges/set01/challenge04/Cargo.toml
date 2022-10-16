@@ -1,5 +1,5 @@
 [package]
-name = "challenge05"
+name = "challenge04"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 encoding = { path = "../../../crates/encoding" }
 xor = { path = "../../../crates/xor" }
+cryptanalysis = { path = "../../../crates/cryptanalysis" }

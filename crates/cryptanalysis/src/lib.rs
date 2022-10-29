@@ -16,7 +16,7 @@ pub fn calculate_lang_score(text: &[u8], lang: &str) -> usize {
     let mut score = 0;
 
     let letter_counts = get_letter_counts(text);
-    
+
     // sort letter counts from highest to lowest
     let mut c: Vec<_> = letter_counts.iter().collect();
     c.sort_by(|a, b| b.1.cmp(a.1));

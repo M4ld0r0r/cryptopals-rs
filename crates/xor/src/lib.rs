@@ -1,14 +1,13 @@
-
 /// Performs a XOR operation on the given text with the given key
-/// 
-/// # Returns 
-/// 
+///
+/// # Returns
+///
 /// A `Vec<u8>` with the result of the xor operation. If either the plaintext or the key is empty, returns an empty `Vec<u8>`
-/// 
-/// # Examples 
+///
+/// # Examples
 /// ```
 /// use crate::xor::xor;
-/// 
+///
 /// let input = String::from("hello repeating key xor");
 /// let key = String::from("xor_this");
 /// let result = xor(input.as_bytes(), key.as_bytes());

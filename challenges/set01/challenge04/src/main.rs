@@ -1,16 +1,7 @@
-// Detect single-character XOR
-//
-//
-// One of the 60-character strings in this file has been encrypted by single-character XOR.
-//
-// Find it.
-//
-// (Your code from #3 should help.)
-
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
 
-use cryptanalysis::calculate_lang_score;
+use cryptanalysis::break_single_byte_xor;
 use encoding::{Decode, Encode};
 use xor::xor;
 
@@ -27,15 +18,13 @@ fn main() {
     for line in reader.lines() {
         let bytes = Vec::from_hex(&line.unwrap()).unwrap();
 
-        for key in 0x00..=0xFF {
-            let xor_result = xor(&bytes, &[key]);
-            let key_score = calculate_lang_score(&xor_result, "EN");
+        let key_scores = break_single_byte_xor(&bytes, "EN");
+        let (key, score) = key_scores[0];
 
-            if key_score > best_score {
-                best_key = key;
-                best_score = key_score;
-                best_line = bytes.clone();
-            }
+        if score > best_score {
+            best_key = key;
+            best_score = score;
+            best_line = bytes.clone();
         }
     }
 

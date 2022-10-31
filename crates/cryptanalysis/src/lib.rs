@@ -1,5 +1,47 @@
 mod utils;
+use std::collections::BTreeMap;
+
 use utils::*;
+use xor::xor;
+
+/// Attack the single byte XOR cipher by tryng all 256 possible keys 
+/// and attributing a score to each of them.
+/// Each score represents how likely it is for the resulting plaintext (decrypted using that key) 
+/// to be written in the source language.
+/// 
+/// # Args
+/// `text`: The target ciphertext 
+/// 
+/// `lang`: The suspected source language (e.g. "EN")
+/// 
+/// # Returns
+/// A `Vec<(u8, usize)>` containing the scores for all the possible keys in descending order
+/// 
+/// # Examples
+/// ```
+/// use cryptanalysis::break_single_byte_xor;
+/// 
+/// let ciphertext = [
+///     27, 55, 55, 51, 49, 54, 63, 120, 21, 27, 127, 43, 120, 52, 49, 51, 61, 120, 57, 120,
+///     40, 55, 45, 54, 60, 120, 55, 62, 120, 58, 57, 59, 55, 54,
+/// ];
+/// let key_scores = break_single_byte_xor(&ciphertext, "EN");
+/// let expected = 0x58;
+/// assert_eq!(key_scores[0].0, expected);
+/// ```
+pub fn break_single_byte_xor(text: &[u8], lang: &str) -> Vec<(u8, usize)> {
+    let mut key_scores: Vec<(u8, usize)> = Vec::with_capacity(256);
+
+    for key in 0x00..=0xFF {
+        let xor_result = xor(text, &[key]);
+        let key_score = calculate_lang_score(&xor_result, lang);
+        key_scores.push((key, key_score));
+    }
+
+    key_scores.sort_by(|a, b| b.1.cmp(&a.1));
+
+    key_scores
+}
 
 /// Calculate how likely it is for the given text to be written in the given language
 ///
@@ -34,4 +76,20 @@ pub fn calculate_lang_score(text: &[u8], lang: &str) -> usize {
     }
 
     score
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn single_byte_xor_attack() {
+        let text = [
+            27, 55, 55, 51, 49, 54, 63, 120, 21, 27, 127, 43, 120, 52, 49, 51, 61, 120, 57, 120,
+            40, 55, 45, 54, 60, 120, 55, 62, 120, 58, 57, 59, 55, 54,
+        ];
+        let key_scores = break_single_byte_xor(&text, "EN");
+        let expected = 0x58;
+        assert_eq!(key_scores[0].0, expected);
+    }
 }

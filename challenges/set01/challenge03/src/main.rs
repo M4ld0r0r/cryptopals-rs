@@ -9,7 +9,7 @@ static CIPHERTEXT: &str = "1b37373331363f78151b7f2b783431333d78397828372d363c783
 fn main() {
     let ciphertext_bytes = Vec::from_hex(CIPHERTEXT).unwrap();
 
-    let key_scores = break_single_byte_xor(&ciphertext_bytes);
+    let key_scores = break_single_byte_xor(&ciphertext_bytes, "EN");
     let (best_key, best_key_score) = key_scores[0];
 
     let plaintext_bytes = xor(&ciphertext_bytes, &[best_key]);

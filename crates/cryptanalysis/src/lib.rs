@@ -4,23 +4,23 @@ use std::collections::BTreeMap;
 use utils::*;
 use xor::xor;
 
-/// Attack the single byte XOR cipher by tryng all 256 possible keys 
+/// Attack the single byte XOR cipher by tryng all 256 possible keys
 /// and attributing a score to each of them.
-/// Each score represents how likely it is for the resulting plaintext (decrypted using that key) 
+/// Each score represents how likely it is for the resulting plaintext (decrypted using that key)
 /// to be written in the source language.
-/// 
+///
 /// # Args
-/// `text`: The target ciphertext 
-/// 
+/// `text`: The target ciphertext
+///
 /// `lang`: The suspected source language (e.g. "EN")
-/// 
+///
 /// # Returns
 /// A `Vec<(u8, usize)>` containing the scores for all the possible keys in descending order
-/// 
+///
 /// # Examples
 /// ```
 /// use cryptanalysis::break_single_byte_xor;
-/// 
+///
 /// let ciphertext = [
 ///     27, 55, 55, 51, 49, 54, 63, 120, 21, 27, 127, 43, 120, 52, 49, 51, 61, 120, 57, 120,
 ///     40, 55, 45, 54, 60, 120, 55, 62, 120, 58, 57, 59, 55, 54,

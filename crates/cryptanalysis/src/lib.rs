@@ -1,5 +1,4 @@
 mod utils;
-use std::collections::BTreeMap;
 
 use utils::*;
 use xor::xor;

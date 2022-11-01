@@ -19,6 +19,18 @@ pub trait Decode: Sized {
     /// assert_eq!(result, vec![0x1a, 0x3d, 0x44]);
     /// ```
     fn from_hex(s: &str) -> Result<Self, DecodeHexError>;
+
+    /// Converts the given base64 encoded string to an instance of type `Self`
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use encoding::Decode;
+    ///
+    /// let result = Vec::from_base64("").unwrap();
+    /// assert_eq!(result, vec![]);
+    /// ```
+    fn from_base64(s: &str) -> Result<Self, DecodeBase64Error>;
 }
 
 impl Decode for Vec<u8> {
@@ -36,6 +48,43 @@ impl Decode for Vec<u8> {
                     return Err(DecodeHexError::InvalidHexChar);
                 }
             }
+        }
+
+        Ok(bytes)
+    }
+
+    fn from_base64(s: &str) -> Result<Self, DecodeBase64Error> {
+        if s.len() == 0 {
+            return Ok(vec![]);
+        }
+
+        if s.len() % 4 != 0 {
+            return Err(DecodeBase64Error::InvalidLength);
+        }
+
+        let mut digits = Vec::with_capacity(s.len() - 2);
+        for c in s.chars() {
+            if c == '=' {
+                break;
+            }
+            digits.push(base64_char_to_u8(c)?);
+        }
+
+        let mut bytes = Vec::with_capacity(3 * s.len() / 4);     
+        for d in digits.chunks(4) {
+            bytes.push((d[0] << 2) + (d[1] >> 4));
+            
+            if d.len() == 2 {
+                break;
+            }
+
+            bytes.push((d[1] << 4) + (d[2] >> 2));
+           
+            if d.len() == 3 {
+                break;
+            }
+
+            bytes.push((d[2] << 6) + d[3]);
         }
 
         Ok(bytes)
@@ -135,6 +184,49 @@ mod tests {
     fn bytes_from_hex_empty() {
         let result = Vec::from_hex("").unwrap();
         assert_eq!(result, vec![])
+    }
+
+    #[test]
+    fn bytes_from_base64_padding_0() {
+        let result = Vec::from_base64("bGlnaHQgd29y").unwrap();
+        let expected = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72];
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_base64_padding_1() {
+        let result = Vec::from_base64("bGlnaHQgd29yay4=").unwrap();
+        let expected = vec![
+            0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B, 0x2E,
+        ];
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_base64_padding_2() {
+        let result = Vec::from_base64("bGlnaHQgd29yaw==").unwrap();
+        let expected = vec![0x6C, 0x69, 0x67, 0x68, 0x74, 0x20, 0x77, 0x6F, 0x72, 0x6B];
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_base64_invalid_length() {
+        let result = Vec::from_base64("bGlnaH}Qgd29yy");
+        let expected = Err(DecodeBase64Error::InvalidLength);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_base64_invalid_char() {
+        let result = Vec::from_base64("bGln)HQgd29y");
+        let expected = Err(DecodeBase64Error::InvalidBase64Char);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn bytes_from_base64_empty() {
+        let result = Vec::from_base64("").unwrap();
+        assert_eq!(result, vec![]);
     }
 
     #[test]

@@ -21,6 +21,6 @@ fn main() {
 
     println!("Best key candidates:\n");
     for key in best_keys {
-        println!("{:?}", String::from_utf8(key).unwrap());
+        println!("{:?}", String::from_utf8_lossy(&key));
     }
 }

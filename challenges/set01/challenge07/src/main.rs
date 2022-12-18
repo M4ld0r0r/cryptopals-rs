@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
 
-use openssl::cipher;
 use openssl::symm::{Cipher, Crypter, Mode};
 
 use encoding::Decode;

@@ -1,3 +1,5 @@
+use std::{collections::HashSet, hash::Hash};
+
 mod utils;
 
 use utils::*;
@@ -109,6 +111,23 @@ pub fn calculate_lang_score(text: &[u8], lang: &str) -> usize {
     score
 }
 
+/// Test if a given ciphertext is likely to be encrypted using AES in ECB mode by checking
+/// if there are repeated blocks of 16 bytes
+/// 
+/// # Args
+/// `ciphertext`: The ciphertext we want to test 
+/// 
+/// # Returns
+/// A `usize` value with the number of repeated blocks 
+pub fn detect_aes_ecb_mode(ciphertext: &[u8]) -> usize {
+    let chunks = ciphertext.chunks(AES_BLOCKSIZE);
+    let unique_chunks: HashSet<&[u8]> = HashSet::from_iter(chunks.clone());
+
+    // If there are repeated blocks, the difference between the total number of chunks
+    // and the number of unique chunks is greater than 0
+    chunks.len() - unique_chunks.len()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -122,5 +141,23 @@ mod tests {
         let key_scores = break_single_byte_xor(&text, "EN");
         let expected = 0x58;
         assert_eq!(key_scores[0].0, expected);
+    }
+
+    #[test]
+    fn aes_in_ecb_mode_detection() {
+        let ciphertext = [
+            216, 128, 97, 151, 64, 168, 161, 155, 120, 64, 168, 163, 28, 129, 10, 61, 8, 100, 154,
+            247, 13, 192, 111, 79, 213, 210, 214, 156, 116, 76, 210, 131, 226, 221, 5, 47, 107,
+            100, 29, 191, 157, 17, 176, 52, 133, 66, 187, 87, 8, 100, 154, 247, 13, 192, 111, 79,
+            213, 210, 214, 156, 116, 76, 210, 131, 148, 117, 201, 223, 219, 193, 212, 101, 151,
+            148, 157, 156, 126, 130, 191, 90, 8, 100, 154, 247, 13, 192, 111, 79, 213, 210, 214,
+            156, 116, 76, 210, 131, 151, 169, 62, 171, 141, 106, 236, 213, 102, 72, 145, 84, 120,
+            154, 107, 3, 8, 100, 154, 247, 13, 192, 111, 79, 213, 210, 214, 156, 116, 76, 210, 131,
+            212, 3, 24, 12, 152, 200, 246, 219, 31, 42, 63, 156, 64, 64, 222, 176, 171, 81, 178,
+            153, 51, 242, 193, 35, 197, 131, 134, 176, 111, 186, 24, 106,
+        ];
+        let result = detect_aes_ecb_mode(&ciphertext);
+        let expected = 3;
+        assert_eq!(result, expected);
     }
 }

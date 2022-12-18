@@ -3,6 +3,8 @@ use std::collections::BTreeMap;
 /// English letter frequencies (highest to lowest)
 pub static EN_CHAR_FREQS: &str = "etaoinsrhldcumfpgwybvkxjqz";
 
+pub static AES_BLOCKSIZE: usize = 16;
+
 pub fn get_source_lang_freqs(lang: &str) -> &str {
     match lang {
         "EN" => return EN_CHAR_FREQS,

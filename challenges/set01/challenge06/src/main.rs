@@ -7,7 +7,6 @@ use encoding::Decode;
 static INPUT_FILE_PATH: &str = "./challenges/set01/challenge06/data/6.txt";
 
 fn main() {
-
     let f = File::open(INPUT_FILE_PATH).unwrap();
     let reader = BufReader::new(f);
 

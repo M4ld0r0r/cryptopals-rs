@@ -26,27 +26,24 @@ pub fn break_repeating_key_xor(
     let mut best_keys: Vec<Vec<u8>> = Vec::with_capacity(6);
 
     // we are interested in the best 2 keys for the best 3 keysizes
-    keysize_scores
-        .iter()
-        .take(3)
-        .for_each(|(keysize, _)| {
-            let mut best_keysize_keys: Vec<Vec<u8>> = Vec::with_capacity(2);
-            best_keysize_keys.push(vec![]);
-            best_keysize_keys.push(vec![]);
+    keysize_scores.iter().take(3).for_each(|(keysize, _)| {
+        let mut best_keysize_keys: Vec<Vec<u8>> = Vec::with_capacity(2);
+        best_keysize_keys.push(vec![]);
+        best_keysize_keys.push(vec![]);
 
-            let blocks = transpose_blocks(text, *keysize);
+        let blocks = transpose_blocks(text, *keysize);
 
-            // get the 2 best single-byte keys for each transposed block 
-            // each single-byte key is a part of the multi-byte key
-            for block in blocks {
-                let key_scores = break_single_byte_xor(&block, lang);
+        // get the 2 best single-byte keys for each transposed block
+        // each single-byte key is a part of the multi-byte key
+        for block in blocks {
+            let key_scores = break_single_byte_xor(&block, lang);
 
-                best_keysize_keys[0].push(key_scores[0].0);
-                best_keysize_keys[1].push(key_scores[1].0);
-            }
-            best_keys.push(best_keysize_keys[0].clone());
-            best_keys.push(best_keysize_keys[1].clone());
-        });
+            best_keysize_keys[0].push(key_scores[0].0);
+            best_keysize_keys[1].push(key_scores[1].0);
+        }
+        best_keys.push(best_keysize_keys[0].clone());
+        best_keys.push(best_keysize_keys[1].clone());
+    });
 
     best_keys
 }

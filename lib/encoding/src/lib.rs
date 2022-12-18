@@ -70,16 +70,16 @@ impl Decode for Vec<u8> {
             digits.push(base64_char_to_u8(c)?);
         }
 
-        let mut bytes = Vec::with_capacity(3 * s.len() / 4);     
+        let mut bytes = Vec::with_capacity(3 * s.len() / 4);
         for d in digits.chunks(4) {
             bytes.push((d[0] << 2) + (d[1] >> 4));
-            
+
             if d.len() == 2 {
                 break;
             }
 
             bytes.push((d[1] << 4) + (d[2] >> 2));
-           
+
             if d.len() == 3 {
                 break;
             }

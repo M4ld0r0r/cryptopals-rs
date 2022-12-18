@@ -53,12 +53,11 @@ pub fn transpose_blocks(text: &[u8], keysize: usize) -> Vec<Vec<u8>> {
 }
 
 /// Return a vector with the keysize scores (using hamming distance) in descending order
-pub fn rate_keysizes(text: &[u8], min_keysize: usize, max_keysize: usize) -> Vec<(usize, f64)>{ 
+pub fn rate_keysizes(text: &[u8], min_keysize: usize, max_keysize: usize) -> Vec<(usize, f64)> {
     let mut keysize_hamming_dists: Vec<(usize, f64)> = vec![];
 
     for keysize in min_keysize..=max_keysize {
-
-        // get the normalized hamming distances between the pairs 
+        // get the normalized hamming distances between the pairs
         // of the first 4 keysize chunks for each keysize
         let chunks: Vec<&[u8]> = text.chunks(keysize).take(4).collect();
         let mut hamming_dist = 0;

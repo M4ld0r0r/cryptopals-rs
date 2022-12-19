@@ -1,6 +1,5 @@
 ### Break repeating-key XOR
 
-li { padding-top: 1em; }
 
 ### It is officially on, now.
 

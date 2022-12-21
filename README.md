@@ -20,7 +20,7 @@ cargo run --bin challengeX # where X ∈ {01, 02, 03, ..., 66}
     - [x] [challenge07: AES in ECB mode](https://cryptopals.com/sets/1/challenges/7)
     - [x] [challenge08: Detect AES in ECB mode](https://cryptopals.com/sets/1/challenges/8)
 - [ ] Set 2
-    - [ ] [challenge09: Implement PKCS#7 padding](https://cryptopals.com/sets/2/challenges/9)
+    - [x] [challenge09: Implement PKCS#7 padding](https://cryptopals.com/sets/2/challenges/9)
     - [ ] [challenge10: Implement CBC mode](https://cryptopals.com/sets/2/challenges/10)
     - [ ] [challenge11: An ECB/CBC detection oracle](https://cryptopals.com/sets/2/challenges/11)
     - [ ] [challenge12: Byte-at-a-time ECB decryption (Simple)](https://cryptopals.com/sets/2/challenges/12)

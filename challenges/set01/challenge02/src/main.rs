@@ -1,5 +1,5 @@
 use encoding::{Decode, Encode};
-use xor::xor;
+use primitives::xor;
 
 static INPUT_1: &str = "1c0111001f010100061a024b53535009181c";
 static INPUT_2: &str = "686974207468652062756c6c277320657965";

@@ -2,7 +2,7 @@ use std::str;
 
 use cryptanalysis::break_single_byte_xor;
 use encoding::Decode;
-use xor::xor;
+use primitives::xor;
 
 static CIPHERTEXT: &str = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
 

@@ -1,5 +1,5 @@
 use encoding::Encode;
-use xor::xor;
+use primitives::xor;
 
 static PLAINTEXT: &str =
     "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal";

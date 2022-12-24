@@ -1,9 +1,9 @@
-use std::{collections::HashSet, hash::Hash};
+use std::{collections::HashSet};
 
 mod utils;
 
 use utils::*;
-use xor::xor;
+use primitives::xor;
 
 /// Attack the repeating key XOR cipher using the Kasiski Examination method.
 ///

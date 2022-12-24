@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 encoding = { path = "../../../lib/encoding" }
-xor = { path = "../../../lib/xor" }
+primitives = { path = "../../../lib/primitives" }
 cryptanalysis = { path = "../../../lib/cryptanalysis" }

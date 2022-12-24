@@ -3,7 +3,7 @@ use std::io::{prelude::*, BufReader};
 
 use cryptanalysis::break_single_byte_xor;
 use encoding::{Decode, Encode};
-use xor::xor;
+use primitives::xor;
 
 static INPUT_FILE_PATH: &str = "./challenges/set01/challenge04/data/4.txt";
 

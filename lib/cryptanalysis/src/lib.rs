@@ -1,9 +1,9 @@
-use std::{collections::HashSet};
+use std::collections::HashSet;
 
 mod utils;
 
-use utils::*;
 use primitives::xor;
+use utils::*;
 
 /// Attack the repeating key XOR cipher using the Kasiski Examination method.
 ///
@@ -113,12 +113,12 @@ pub fn calculate_lang_score(text: &[u8], lang: &str) -> usize {
 
 /// Test if a given ciphertext is likely to be encrypted using AES in ECB mode by checking
 /// if there are repeated blocks of 16 bytes
-/// 
+///
 /// # Args
-/// `ciphertext`: The ciphertext we want to test 
-/// 
+/// `ciphertext`: The ciphertext we want to test
+///
 /// # Returns
-/// A `usize` value with the number of repeated blocks 
+/// A `usize` value with the number of repeated blocks
 pub fn detect_aes_ecb_mode(ciphertext: &[u8]) -> usize {
     let chunks = ciphertext.chunks(AES_BLOCKSIZE);
     let unique_chunks: HashSet<&[u8]> = HashSet::from_iter(chunks.clone());

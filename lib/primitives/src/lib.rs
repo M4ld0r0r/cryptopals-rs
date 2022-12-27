@@ -1,7 +1,6 @@
 mod error;
 pub use error::*;
 
-
 /// Performs a XOR operation on the given text with the given key
 ///
 /// # Returns
@@ -28,20 +27,19 @@ pub fn xor(input: &[u8], key: &[u8]) -> Vec<u8> {
     input.iter().zip(key).map(xor).collect()
 }
 
-
 /// Adds padding bytes to the given text according to PKCS#7 padding rules
-/// 
+///
 /// # Args
-/// `text`: the text to be padded 
-/// 
-/// `block_size`: the block size to pad to 
-/// 
+/// `text`: the text to be padded
+///
+/// `block_size`: the block size to pad to
+///
 /// # Returns
-/// A `Vec<u8>` with the padded text or an InvalidBlockSizeError if `block_size` is 
+/// A `Vec<u8>` with the padded text or an InvalidBlockSizeError if `block_size` is
 /// less than or equal to 0 or greater than 255
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use primitives::pad_pkcs7;
 ///
@@ -56,7 +54,7 @@ pub fn xor(input: &[u8], key: &[u8]) -> Vec<u8> {
 /// assert_eq!(result, expected);
 /// ```
 pub fn pad_pkcs7(text: &[u8], block_size: usize) -> Result<Vec<u8>, InvalidBlockSizeError> {
-    if block_size > 255 || block_size <= 0 {
+    if block_size > 255 || block_size == 0 {
         return Err(InvalidBlockSizeError);
     }
 
@@ -77,17 +75,6 @@ mod tests {
     use super::*;
 
     static BLOCK_SIZE: usize = 16;
-
-    fn single_byte_xor() {
-        let input = String::from("hello single byte xor");
-        let key = String::from("b");
-        let result = xor(input.as_bytes(), key.as_bytes());
-        let expected = vec![
-            0x0A, 0x07, 0x0E, 0x0E, 0x0D, 0x42, 0x11, 0x0B, 0x0C, 0x05, 0x0E, 0x07, 0x42, 0x00,
-            0x1B, 0x16, 0x07, 0x42, 0x1A, 0x0D, 0x10,
-        ];
-        assert_eq!(result, expected);
-    }
 
     #[test]
     fn repeating_key_xor_smaller_key() {

@@ -1,6 +1,5 @@
 use std::fmt;
 
-/// Errors that can occur while decoding hexadecimal strings
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InvalidBlockSizeError;
 

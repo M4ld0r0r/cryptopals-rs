@@ -54,7 +54,7 @@ impl Decode for Vec<u8> {
     }
 
     fn from_base64(s: &str) -> Result<Self, DecodeBase64Error> {
-        if s.len() == 0 {
+        if s.is_empty() {
             return Ok(vec![]);
         }
 

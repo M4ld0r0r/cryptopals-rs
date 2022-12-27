@@ -23,7 +23,7 @@ fn main() {
     let plaintext = cipher.decrypt(&ciphertext).unwrap();
 
     println!(
-        "Decrypted text:\n\n{:?}",
+        "Decrypted text:\n\n{}",
         std::str::from_utf8(&plaintext).unwrap()
     );
 }

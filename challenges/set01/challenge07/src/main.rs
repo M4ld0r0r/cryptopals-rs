@@ -1,8 +1,7 @@
 use std::fs::File;
 use std::io::{prelude::*, BufReader};
 
-use openssl::symm::{Cipher, Crypter, Mode};
-
+use aes::{Aes128, Mode};
 use encoding::Decode;
 
 static INPUT_FILE_PATH: &str = "./challenges/set01/challenge07/data/7.txt";
@@ -19,14 +18,9 @@ fn main() {
 
     let ciphertext = Vec::from_base64(&ciphertext).unwrap();
 
-    let mut plaintext = vec![0x0; ciphertext.len()];
+    let cipher = Aes128::new(KEY.as_bytes().to_vec(), Mode::ECB, None).unwrap();
 
-    // decrypt
-    let decrypter = Crypter::new(Cipher::aes_128_ecb(), Mode::Decrypt, KEY.as_bytes(), None);
-    decrypter
-        .unwrap()
-        .update(&ciphertext, &mut plaintext)
-        .unwrap();
+    let plaintext = cipher.decrypt(&ciphertext).unwrap();
 
     println!(
         "Decrypted text:\n\n{:?}",

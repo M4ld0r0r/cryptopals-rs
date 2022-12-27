@@ -30,7 +30,7 @@ pub fn break_repeating_key_xor(
     // we are interested in the best 2 keys for the best 3 keysizes
     keysize_scores.iter().take(3).for_each(|(keysize, _)| {
         let mut best_keysize_keys: Vec<Vec<u8>> = vec![vec![], vec![]];
-        
+
         let blocks = transpose_blocks(text, *keysize);
 
         // get the 2 best single-byte keys for each transposed block

@@ -93,17 +93,13 @@ impl Aes128 {
         }
 
         match self.mode {
-            Mode::ECB => {
-                Ok(aes_ecb(plaintext, &self.key, false))
-            }
-            Mode::CBC => {
-                Ok(aes_cbc(
-                    plaintext,
-                    &self.key,
-                    self.iv.as_ref().unwrap(),
-                    false,
-                ))
-            }
+            Mode::ECB => Ok(aes_ecb(plaintext, &self.key, false)),
+            Mode::CBC => Ok(aes_cbc(
+                plaintext,
+                &self.key,
+                self.iv.as_ref().unwrap(),
+                false,
+            )),
         }
     }
 
@@ -144,17 +140,13 @@ impl Aes128 {
         }
 
         match self.mode {
-            Mode::ECB => {
-                Ok(aes_ecb(ciphertext, &self.key, true))
-            }
-            Mode::CBC => {
-                Ok(aes_cbc(
-                    ciphertext,
-                    &self.key,
-                    self.iv.as_ref().unwrap(),
-                    true,
-                ))
-            }
+            Mode::ECB => Ok(aes_ecb(ciphertext, &self.key, true)),
+            Mode::CBC => Ok(aes_cbc(
+                ciphertext,
+                &self.key,
+                self.iv.as_ref().unwrap(),
+                true,
+            )),
         }
     }
 }

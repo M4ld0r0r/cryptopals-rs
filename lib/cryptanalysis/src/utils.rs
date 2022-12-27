@@ -7,9 +7,9 @@ pub static AES_BLOCKSIZE: usize = 16;
 
 pub fn get_source_lang_freqs(lang: &str) -> &str {
     match lang {
-        "EN" => return EN_CHAR_FREQS,
+        "EN" => EN_CHAR_FREQS,
         _ => unimplemented!("{}", lang),
-    };
+    }
 }
 
 /// Get the frequency count of all the alphabetic chars on the given text
